@@ -1,4 +1,5 @@
 import pygame
+from math import pi
 import library.sprite_class as sprite_class
 
 _screen = None
@@ -6,9 +7,11 @@ fill_color = [0, 0, 0]
 translation = [0, 0]
 new_sprite = None
 
+pygame.font.init()
+_font = pygame.font.SysFont(pygame.font.get_default_font(), 36)
+
 def draw_init(__screen, __new_sprite):
     global _screen, new_sprite
-    print("Previous screen:", _screen)
     _screen = __screen
     new_sprite = __new_sprite
 
@@ -32,7 +35,11 @@ def translate(x, y):
 def fill(*c):
     global fill_color
     fill_color = _color_process(c)
-    print(fill_color)
+
+def text(t, x, y, surface=None):
+    if surface == None: surface = _screen
+    _text = _font.render(str(t), False, (0, 0, 0))
+    surface.blit(_text, pygame.Rect(x, y, _text.get_width(), _text.get_height()))
 
 def background(*c, surface=None):
     if surface == None: surface = _screen
@@ -75,7 +82,7 @@ def sprite(image, x, y=None, surface=None, center=False, rotation=0):
     if surface == None: surface = _screen
 
     if rotation != 0:
-        image = pygame.transform.rotate(image, rotation)
+        image = pygame.transform.rotate(image, rotation * (180 / pi))
 
     if y == None:
         y = x[1]
@@ -85,3 +92,7 @@ def sprite(image, x, y=None, surface=None, center=False, rotation=0):
         y -= image.get_height() / 2
 
     surface.blit(image, pygame.Rect(x + translation[0], y + translation[1], image.get_width(), image.get_height()))
+
+def fast_sprite(image, p, surface=None):
+    if surface == None: surface = _screen
+    surface.blit(image, pygame.Rect(p[0] + translation[0], p[1] + translation[1], image.get_width(), image.get_height()))

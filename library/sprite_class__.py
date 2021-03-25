@@ -8,9 +8,14 @@ class new_sprite(pygame.Surface):
         self._fill = super().fill
         self.translation = [0, 0]
         self.fill_color = (0, 0, 0)
+
+        self.width = super().get_width()
+        self.height = super().get_height()
     
     def rotated(self, a):
         return new_sprite(pygame.transform.rotate(self, a))
     
     def scale(self, t):
+        self.width *= t
+        self.height *= t
         return new_sprite(pygame.transform.scale(self, (self.get_width() * t, self.get_height() * t)))

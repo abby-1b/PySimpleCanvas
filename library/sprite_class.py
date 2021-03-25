@@ -13,13 +13,10 @@ for a in range(len(_df)):
     _df[a] = "    " + _df[a]
 _df = "\n".join(_df)
 _df = _df.replace(", surface=None", "")
-_df = _df.replace("\n\n", "\n")
-_df = _df.replace("\n    \n", "\n")
 _df = _df.replace("surface", "self")
 _df = _df.replace("fill_color", "self.fill_color")
 _df = _df.replace("translation", "self.translation")
 _df = _df.replace("_color_process", "draw._color_process")
 _df = open("library/sprite_class__.py", "r").read() + _df
 
-print(_df)
 exec(_df, locals())

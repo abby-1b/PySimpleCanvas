@@ -64,7 +64,6 @@ def init():
     g["running"] = True
     clock = pygame.time.Clock()
     while g["running"]:
-        #print(g["keysPressed"])
 
         if g["mouse_pressed"] != 0:
             g["mouse_time"] += 1
@@ -101,8 +100,9 @@ def init():
             else:
                 pass
 
-        #print(clock.get_fps())
         g["loop"]()
+        text(clock.get_fps(), 5, 5)
+        draw.translation = [0, 0]
 
         # Flip the display (vSync)
         pygame.display.flip()
