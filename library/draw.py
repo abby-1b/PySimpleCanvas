@@ -1,13 +1,16 @@
 import pygame
+import library.sprite_class as sprite_class
 
 _screen = None
 fill_color = [0, 0, 0]
 translation = [0, 0]
+new_sprite = None
 
-def draw_init(__screen):
-    global _screen
+def draw_init(__screen, __new_sprite):
+    global _screen, new_sprite
     print("Previous screen:", _screen)
     _screen = __screen
+    new_sprite = __new_sprite
 
 def _color_process(c):
     if type(c[0]) in [list, tuple]: c = c[0]
@@ -58,9 +61,9 @@ def load_sprite(name=None):
 
         Image: the loaded image.
     """
-    return pygame.image.load(name)
+    return sprite_class.new_sprite(pygame.image.load(name))
 
-def sprite(image, x, y=None, surface=None):
+def sprite(image, x, y=None, surface=None, center=False, rotation=0):
     """Draws a sprite to the screen using XY coordinates.
 
     Args:
@@ -70,7 +73,15 @@ def sprite(image, x, y=None, surface=None):
         y (float): The Y position of the sprite
     """
     if surface == None: surface = _screen
+
+    if rotation != 0:
+        image = pygame.transform.rotate(image, rotation)
+
     if y == None:
-        surface.blit(image, pygame.Rect(x[0] + translation[0], x[1] + translation[1], image.get_width(), image.get_height()))
-    else:
-        surface.blit(image, pygame.Rect(x + translation[0], y + translation[1], image.get_width(), image.get_height()))
+        y = x[1]
+        x = x[0]
+    if center:
+        x -= image.get_width() / 2
+        y -= image.get_height() / 2
+
+    surface.blit(image, pygame.Rect(x + translation[0], y + translation[1], image.get_width(), image.get_height()))

@@ -19,7 +19,7 @@ _df = _df.replace("surface", "self")
 _df = _df.replace("fill_color", "self.fill_color")
 _df = _df.replace("translation", "self.translation")
 _df = _df.replace("_color_process", "draw._color_process")
-_df = "class new_sprite(pygame.Surface):\n    def __init__(self, w, h):\n        super().__init__((w, h), pygame.SRCALPHA, 32)\n        self._fill = super().fill\n        self.translation = [0, 0]\n        self.fill_color = (0, 0, 0)" + _df
+_df = open("library/sprite_class__.py", "r").read() + _df
 
 print(_df)
 exec(_df, locals())

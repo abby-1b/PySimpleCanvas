@@ -17,6 +17,7 @@ mouse_x, mouse_y, mouse_pressed, mouse_time = (0, 0, 0, 0)
 width, height = (500, 500)
 
 running = False
+frame_count = 0
 screen = None
 
 def size(w=500, h=500, resizable=False):
@@ -30,7 +31,7 @@ def size(w=500, h=500, resizable=False):
     else:
         screen = pygame.display.set_mode((w, h))
 
-    draw_init(screen)
+    draw_init(screen, new_sprite)
 
 def name(n):
     pygame.display.set_caption(n)
@@ -51,6 +52,7 @@ def init():
     g["setup"]()
 
     g["screen"] = screen
+    g["frame_count"] = 0
 
     # Mouse Events
     if not "mouse_clicked" in g: g["mouse_clicked"] = (lambda *x: None)
@@ -105,6 +107,8 @@ def init():
         # Flip the display (vSync)
         pygame.display.flip()
         clock.tick(60)
+        
+        g["frame_count"] += 1
     pygame.quit()
 
 class Object(object):
