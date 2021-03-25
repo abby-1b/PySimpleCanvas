@@ -1,6 +1,8 @@
 import math
 sin, cos, tan, tanh = math.sin, math.cos, math.tan, math.tanh
 
+from random import *
+
 def normalize(t):
     return t
 

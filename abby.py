@@ -1,22 +1,32 @@
 ## This is the shit i do. don't fucken touch it.
 from library.pbb import *
 
+yellow = (226, 230, 168)
+purple = (63, 63, 116)
+
+stage = new_sprite(1920 * 2, 1080 * 2)
+
 player = Object()
 player.pos = [250, 250]
 player.vel = [0, 0]
-player.sprite = load_image("image.png")
+player.sprite = load_sprite("Assets/ship.png")
 
 def setup():
-    size(500, 500, resizable=True)
-    name("Game!")
-    icon(load_image("image.png"))
+    size(1920 / 2, 1080 / 2, resizable=True)
+    name("Rocket!")
+
+    stage.background(purple)
+    stage.fill(0, 0, 0, 0)
+
+    stage.translate(20, 20)
 
 def loop():
-    background(255)
-    control_2d_WASD(player)
-    sprite(player.sprite, add(player.pos, [0, mouse_pressed]))
+    background(random() * 255)
+
+    stage.circle(mouse_x, mouse_y, 20)
+    sprite(stage, 0, 0)
 
 def window_resized(w, h):
-    print(w, h)
+    global stage
 
 init()

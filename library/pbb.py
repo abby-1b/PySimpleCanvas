@@ -1,8 +1,10 @@
+new_sprite = None
+
 import pygame
 
 from library.draw import *
 from library.pbb_math import *
-from library.sprite import *
+from library.sprite_class import *
 from library.controller import *
 
 import inspect
@@ -10,11 +12,18 @@ import inspect
 pygame.init()
 
 keys_pressed = []
-mouse_x, mouse_y, mouse_pressed = (0, 0, 0)
+mouse_x, mouse_y, mouse_pressed, mouse_time = (0, 0, 0, 0)
+
+width, height = (500, 500)
+
 running = False
 screen = None
 
 def size(w=500, h=500, resizable=False):
+    w, h = int(w), int(h)
+    g = dict(inspect.getmembers(inspect.stack()[1][0]))["f_globals"]
+
+    g["width"], g["height"] = w, h
     global screen
     if resizable:
         screen = pygame.display.set_mode((w, h), pygame.RESIZABLE)
@@ -22,7 +31,6 @@ def size(w=500, h=500, resizable=False):
         screen = pygame.display.set_mode((w, h))
 
     draw_init(screen)
-    sprite_init(screen)
 
 def name(n):
     pygame.display.set_caption(n)
@@ -31,7 +39,7 @@ def icon(n):
     pygame.display.set_icon(n)
 
 def init():
-    global running
+    global running, screen
 
     # Get globals (very hacky ;-;)
     g = dict(inspect.getmembers(inspect.stack()[1][0]))["f_globals"]
@@ -41,6 +49,8 @@ def init():
 
     # Run setup
     g["setup"]()
+
+    g["screen"] = screen
 
     # Mouse Events
     if not "mouse_clicked" in g: g["mouse_clicked"] = (lambda *x: None)
@@ -55,20 +65,27 @@ def init():
         #print(g["keysPressed"])
 
         if g["mouse_pressed"] != 0:
-            g["mouse_pressed"] += 1
+            g["mouse_time"] += 1
 
         # Event loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 g["running"] = False
             elif event.type == pygame.MOUSEMOTION:
-                g["mouseX"], g["mouseY"] = event.pos
+                g["mouse_x"], g["mouse_y"] = event.pos
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                g["mouse_pressed"] = 1
+                if event.button == 3:
+                    g["mouse_pressed"] += 4
+                else:
+                    g["mouse_pressed"] += event.button
             elif event.type == pygame.MOUSEBUTTONUP:
-                if g["mouse_pressed"] < 300:
+                if g["mouse_time"] < 40:
                     g["mouse_clicked"]()
-                g["mouse_pressed"] = 0
+                g["mouse_time"] = 0
+                if event.button == 3:
+                    g["mouse_pressed"] -= 4
+                else:
+                    g["mouse_pressed"] -= event.button
             elif event.type == pygame.KEYDOWN:
                 g["keys_pressed"] += [event.unicode]
                 g["key_pressed"](event.unicode, event.key)
@@ -78,6 +95,7 @@ def init():
             elif event.type == pygame.VIDEORESIZE:
                 screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
                 g["window_resized"](event.w, event.h)
+                g["width"], g["height"] = event.w, event.h
             else:
                 pass
 
