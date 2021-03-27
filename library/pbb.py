@@ -2,6 +2,7 @@ new_sprite = None
 
 import pygame
 
+from library.colors import *
 from library.draw import *
 from library.pbb_math import *
 from library.sprite_class import *
@@ -101,7 +102,6 @@ def init():
                 pass
 
         g["loop"]()
-        text(clock.get_fps(), 5, 5)
         draw.translation = [0, 0]
 
         # Flip the display (vSync)
